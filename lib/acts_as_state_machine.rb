@@ -150,6 +150,15 @@ module ScottBarron                   #:nodoc:
         def current_state
           self.send(self.class.state_column).to_sym
         end
+        
+        # Returns possible states the current state can transition to
+        def possible_states
+          returning Array.new do |events|
+            self.class.read_inheritable_attribute(:transition_table).each_pair do |event, value|
+              events << event if value.detect{|transition| transition.from == current_state.to_s }
+            end
+          end 
+        end
 
         # Returns what the next state for a given event would be, as a Ruby symbol.
         def next_state_for_event(event)
