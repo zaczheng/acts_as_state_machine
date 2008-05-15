@@ -151,8 +151,8 @@ module ScottBarron                   #:nodoc:
           self.send(self.class.state_column).to_sym
         end
         
-        # Returns possible states the current state can transition to
-        def possible_states
+        # Returns possible events that can occur with the current state
+        def possible_events
           returning Array.new do |events|
             self.class.read_inheritable_attribute(:transition_table).each_pair do |event, value|
               events << event if value.detect{|transition| transition.from == current_state.to_s }
